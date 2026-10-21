@@ -1,0 +1,41 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "emdash-theme-site-5",
+	"main": "./src/worker.ts",
+	"compatibility_date": "2026-02-24",
+	"compatibility_flags": ["nodejs_compat"],
+	// デプロイ直後から workers.dev のアドレスで開けるようにする（段階0の5番で、オフのままだった）
+	"workers_dev": true,
+	// ログ（Observability）を最初からオンにする。無いと、サイトで何が起きたかを Cloudflare の画面で見られない（段階1の4番）
+	"observability": {
+		"enabled": true,
+		"logs": {
+			"enabled": true,
+			"invocation_logs": true,
+		},
+	},
+	// テーマ（親）を受け取るための鍵。Deploy ボタンの画面に欄として出す（値はお客さんごと。ここには書かない）。
+	// ビルドの最初の scripts/yulab-parent.mjs がここから読み（ビルドの変数 YULAB_KEY があればそちらが先）、
+	// 動いているサイトも env.YULAB_KEY として使う（置き場に新しい版を聞くとき）
+	"vars": {
+		"YULAB_KEY": "yk_test_bf6df0393be0dbaf1e8b032a2e2cb0e1",
+	},
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "emdash-theme-site-5","database_id": "1d6340b9-a09d-4773-a55a-57336b4432f0",
+		},
+	],
+	"r2_buckets": [
+		{
+			"binding": "MEDIA",
+			"bucket_name": "emdash-theme-site-5-media","preview_bucket_name": "emdash-theme-site-5-media",
+		},
+	],
+	// Sandboxed plugins require Worker Loader, available on Workers paid plans. Uncomment to enable:
+	// "worker_loaders": [{ "binding": "LOADER" }],
+	// General maintenance cron trigger
+	"triggers": {
+		"crons": ["* * * * *"],
+	},
+}
